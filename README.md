@@ -14,34 +14,11 @@ Users can **modify, delete, or create new rules** just like in the original view
 
 ## Installation
 
-### Using OpenWrt SDK or Imagebuilder
+Download the .ipk file from the [Releases](https://github.com/LordSpectre/OpenWRT-Tab-FW-Rules/releases) page and install it on your router using `opkg install <filename>` or via the LuCI interface.
 
-1. Clone this repository into your `package/` directory:
-   ```bash
-   git clone https://github.com/LordSpectre/OpenWRT-Tab-FW-Rules.git package/luci-app-firewall-tabs
-   ```
+### Build ipk yourself
 
-2.  Update and install feeds (if needed):
-    ```bash
-    ./scripts/feeds update -a
-    ./scripts/feeds install -a
-    ```
-
-3.  Select the package in menuconfig:
-    ```bash
-    make menuconfig
-    ```
-    Navigate to **LuCI -> 3. Applications -> luci-app-firewall-tabs**.
-
-4.  Compile the package:
-    ```bash
-    make package/luci-app-firewall-tabs/compile
-    ```
-
-5.  Install the generated IPK file on your router:
-    ```bash
-    opkg install bin/packages/your_arch/base/luci-app-firewall-tabs_1.0-1_all.ipk
-    ```
+Clone this [repo](https://github.com/LordSpectre/OpenWRT-Tab-FW-Rules/) and run the `build-ipk.sh` script.
 
 ### Manual Installation
 
