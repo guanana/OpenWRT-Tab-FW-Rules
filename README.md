@@ -1,49 +1,66 @@
-
 # LuCI Firewall Tabs Enhancement
 
 Following my first attempt to improve the LuCI interface so that Firewall rules would be displayed in separate tabs based on their originating zone: [OpenWRT-Viewer](https://github.com/LordSpectre/OpenWRT-Viewer), this is my second attempt, implemented directly in LuCI without using an external server.
 
-## Package Contents
+## Features
 
-### `luci-app-firewall-rules.json`
-This file will add a dedicated tab under Network → Firewall, providing a more organized and user-friendly way to manage/view firewall rules.
+This package adds a dedicated tab under **Network → Firewall**, providing a more organized and user-friendly way to manage and view firewall rules by categorizing them into separate tabs based on their originating zone.
 
-### `firewalltabs_view.js`
-This JavaScript file adds a tab next to the existing Firewall rules tab and is **read-only**. It simply collects all firewall rules and categorizes them into separate tabs, displaying rules specific to their originating zone. No modifications can be made here—it's purely for viewing.
+Users can **modify, delete, or create new rules** just like in the original view.
 
-### `firewalltabs-full.js`
-Here, I attempted to reproduce the entire "Firewall Rules" tab. Like the previous JavaScript file, it takes all firewall rules and organizes them into separate tabs based on their originating zone.
+## Known Issues
 
-In this version, users can **modify, delete, or create new rules** just like in the original tab.
+**⚠ WARNING:** There is a minor issue related to adding and editing rules. When a new rule is added, it may not immediately display all its parameters in the GUI. The page needs to be refreshed or the user needs to click on the tab again to see the changes correctly. This is a LuCI refresh issue that is yet to be addressed.
 
-**⚠ WARNING:** Unfortunately, I haven't been able to fully resolve a minor issue related to adding and editing rules. For example, when a new rule is added, it will not immediately display all its parameters in the GUI. The page needs to be refreshed or, more simply, the user needs to click on the tab again.
+## Installation
 
-This is a LuCI refresh issue that I have yet to address.
+### Using OpenWrt SDK or Imagebuilder
 
-Other than that, the interface functions perfectly: rules can be added, modified, or deleted as expected—it’s purely a visual matter.
+1. Clone this repository into your `package/` directory:
+   ```bash
+   git clone https://github.com/LordSpectre/OpenWRT-Tab-FW-Rules.git package/luci-app-firewall-tabs
+   ```
 
-I hope to resolve this issue in the coming days, and any contributions are welcome.
+2.  Update and install feeds (if needed):
+    ```bash
+    ./scripts/feeds update -a
+    ./scripts/feeds install -a
+    ```
 
-## Installation Instructions
+3.  Select the package in menuconfig:
+    ```bash
+    make menuconfig
+    ```
+    Navigate to **LuCI -> 3. Applications -> luci-app-firewall-tabs**.
 
-Since there are only two files, I did not create an IPK package. Instead, the files need to be copied manually to their respective directories.
+4.  Compile the package:
+    ```bash
+    make package/luci-app-firewall-tabs/compile
+    ```
 
-1. Choose the view you prefer (`firewalltabs-full.js` or `firewalltabs_view.js`) and rename the `.js` file to `firewalltabs.js`.
+5.  Install the generated IPK file on your router:
+    ```bash
+    opkg install bin/packages/your_arch/base/luci-app-firewall-tabs_1.0-1_all.ipk
+    ```
 
-2. Copy the two files exactly to these locations:
-```
-/usr/share/luci/menu.d/luci-app-firewall-rules.json
-/www/luci-static/resources/view/firewall/firewalltabs.js
-```
+### Manual Installation
 
-4. Clear the cache on OpenWRT and in your browser:
+If you prefer not to build the full package, you can manually copy the necessary files to your router.
 
-- Run this command on OpenWRT:
-  ```
-  root@OpenWRT # rm -f /tmp/*cach*
-  ```
-- On the browser: Press `CTRL+SHIFT+R` or `CTRL+F5`.
+1. **Copy the menu entry**:
+   Copy `root/usr/share/luci/menu.d/luci-app-firewall-rules.json` to `/usr/share/luci/menu.d/luci-app-firewall-rules.json` on your router.
 
-The new tab will appear under **Network → Firewall**, as shown in the image below.
+2. **Copy the view**:
+   Copy `htdocs/luci-static/resources/view/firewall/firewalltabs.js` to `/www/luci-static/resources/view/firewall/firewalltabs.js` on your router.
+
+3. **Clear the cache**:
+   Run the following on your router:
+   ```bash
+   rm -f /tmp/luci-indexcache
+   rm -rf /tmp/luci-modulecache/
+   ```
+   Then refresh your browser (formatted as `CTRL+SHIFT+R` or `CTRL+F5`).
+
+The new tab will appear under **Network → Firewall**, as shown below.
 
 ![Firewall Tabs Screenshot](https://cover.laforestaincantata.org/i/00f6d64b-dabe-4300-ab3f-50fe84d870c3.png)
